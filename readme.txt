@@ -7,6 +7,6 @@ License for media is Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
 
 The only dependency is default in minetest game.
 
-Bug reports and suggestions on the forum thread on https://forum.minetest.net/index.php
+Bug reports and suggestions on the forum thread on https://forum.minetest.net/viewtopic.php?f=9&t=21753
 
 Install this by putting it in your .minetest/mods folder.
