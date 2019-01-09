@@ -13,3 +13,8 @@ player_death.death_position_message (Anounce position of death?) enum Player Pla
 #    -   Drop: Players iinventory is droped on ground
 #    -   Keep: Player keeps thier inventory across respawns
 player_death.mode (What to do when a player dies) enum Tombstone Tombstone,Drop,Keep
+
+#    Show In Hud:
+#    -   Yes:  Gravemarkers are shown in hud
+#    -   No: Gravemarkers are not shown in hud
+player_death.death_show_in_hud (Show the gravemarkers in hud?) enum Yes Yes,No

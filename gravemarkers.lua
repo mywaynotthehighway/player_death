@@ -1,6 +1,8 @@
 player_death = {}
-namem = {}
+player_death.huds = {}
+local namem = {}
 local shapes = {}
+
 local mode = minetest.settings:get("player_death.mode") or "Tombstone"
 if mode ~= "Tombstone" and mode ~= "Drop" and mode ~= "Keep" then
 		mode = "Tombstone"
@@ -9,6 +11,11 @@ if mode ~= "Tombstone" and mode ~= "Drop" and mode ~= "Keep" then
 local death_position_message = minetest.settings:get("player_death.death_position_message") or "Player"
 if death_position_message ~= "Player" and death_position_message ~= "All" and death_position_message ~= "Off" then
 		death_position_message = "Player"
+end
+
+local death_show_in_hud = minetest.settings:get("player_death.death_show_in_hud") or "Yes"
+if death_show_in_hud ~= "Yes" and death_show_in_hud ~= "No" then
+		death_show_in_hud = "Yes"
 	end
 
 local function is_owner(pos, name)
@@ -187,18 +194,59 @@ for i in ipairs (shapes) do
 			end
 			minetest.remove_node(pos)
 		end
+		
+		if death_show_in_hud == "Yes" then
+
+		for keym, val in pairs(player_death.huds[player]) do
+			local hudobject = player:hud_get(val)
+			for key, val in pairs(hudobject) do
+				if key == "world_pos" then 
+					if val.x == pos.x and val.y == pos.y and val.z == pos.z then
+						player:hud_remove(keym);
+						player_death.huds[player][keym] = nil;
+					end
+				end
+			end
+                end
+
+		end
+
 	end,
    })
 
 end
 end
 
+minetest.register_on_joinplayer(function(player)
+
+	if death_show_in_hud == "Yes" then
+
+	if not player_death.huds[player] then
+            player_death.huds[player] = {}
+        end
+
+	end
+end)
+
 minetest.register_on_dieplayer(function(player)
-        local int num = math.random(0, tablelength(namem))
+        local num = math.random(0, tablelength(namem))
         output = ('player_death:'..namem[num]..'_'..tostring(math.random(0, 14)))
 	local player_name = player:get_player_name()
 	local pos = vector.round(player:get_pos())
 	local pos_string = minetest.pos_to_string(pos)
+
+	if death_show_in_hud == "Yes" then
+
+	local hudid = player:hud_add({
+            hud_elem_type = "waypoint",
+            name = player:get_player_name().."'s grave!",
+            number = 0xFFFFFF,
+            world_pos = {x=pos.x, y=pos.y, z=pos.z},
+        });
+
+	player_death.huds[player][hudid] = hudid;
+
+	end
 
 	if mode == "Keep" or (creative and creative.is_enabled_for
 			and creative.is_enabled_for(player:get_player_name())) then
@@ -255,6 +303,8 @@ minetest.register_on_dieplayer(function(player)
 		end
 		return
 	end
+
+	
 
 	local param2 = minetest.dir_to_facedir(player:get_look_dir())
 	minetest.set_node(pos, {name = output, param2 = param2})
