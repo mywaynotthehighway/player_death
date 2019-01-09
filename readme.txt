@@ -1,4 +1,4 @@
-player_death v1.0
+player_death v1.1
 
 This mod is intended to replace the bones mod in minetest game as it replaces the bones cube with random changing gravemarkers.
 
